@@ -57,7 +57,7 @@
             android:layout_marginRight="30dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            app:srcCompat="@android:mipmap/sym_def_app_icon"/>
+            app:srcCompat="@drawable/cuaca"/>
 
         <TextView
             android:id="@+id/text_desc"
