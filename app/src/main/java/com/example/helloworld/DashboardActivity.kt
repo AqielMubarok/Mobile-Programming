@@ -1,7 +1,9 @@
 package com.example.helloworld
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +17,13 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-        //run("https://api.openweathermap.org/data/2.5/forecast?q=purwakarta,ID&appid=2ce659b9c25fc6fe3a07de4ca71d1dac")
+        val pilihlokasi =findViewById(R.id.pilihlokasi) as ImageView
+        pilihlokasi.setOnClickListener {
+            val intent = Intent (this, LokasiActivity::class.java)
+            startActivity(intent)
+        }
+
+//        run("https://api.openweathermap.org/data/2.5/forecast?q=purwakarta,ID&appid=2ce659b9c25fc6fe3a07de4ca71d1dac")
 
         NetworkConfig().getService().getWeathers("purwakarta,ID", "2ce659b9c25fc6fe3a07de4ca71d1dac").enqueue(object : retrofit2.Callback<ResultWeather> {
 
@@ -24,10 +32,11 @@ class DashboardActivity : AppCompatActivity() {
                 Log.d("response", response.body().toString())
 
                 txtKota.text = item?.city?.name
-                txtTanggal.text = item?.list?.get(0)?.dt.toString()
-                text_temp.text = item?.list?.get(0)?.main?.temp.toString()
-                text_temp_min_max.text = item?.list?.get(0)?.main?.tempMin.toString() + " - " + item?.list?.get(0)?.main?.tempMax.toString()
+                txtTanggal.text = item?.list?.get(0)?.dt?.let { Util.getDayName(it.toLong()) }
+                text_temp.text = item?.list?.get(0)?.main?.temp?.let { Util.setFormatTemperature(it) }
+                text_temp_min_max.text = item?.list?.get(0)?.main?.tempMin?.let { Util.setFormatTemperature(it) } + " - " + item?.list?.get(0)?.main?.tempMax?.let { Util.setFormatTemperature(it) }
                 text_desc.text = item?.list?.get(0)?.weather?.get(0)?.description.toString()
+                item?.list?.get(0)?.weather?.get(0)?.id?.let { Util.getArtResourceForWeatherCondition(it) }?.let { image_desc.setImageResource(it) }
 
                 var list = item?.list
                 var itemAdp = ItemAdapter(list as List<ListItem>)
