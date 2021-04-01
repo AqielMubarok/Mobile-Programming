@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_dashboard.*
@@ -19,8 +20,9 @@ class DashboardActivityJakarta : AppCompatActivity() {
 
         val pilihlokasi =findViewById(R.id.pilihlokasi) as ImageView
         pilihlokasi.setOnClickListener {
-            val intent = Intent (this, LokasiActivity::class.java)
+            val intent = Intent(this, LokasiActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
 //        run("https://api.openweathermap.org/data/2.5/forecast?q=purwakarta,ID&appid=2ce659b9c25fc6fe3a07de4ca71d1dac")
@@ -65,5 +67,17 @@ class DashboardActivityJakarta : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {}
             override fun onResponse(call: Call, response: Response) = println(response.body()?.string())
         })
+    }
+
+    override fun onBackPressed() {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Confirm to Exit")
+        alertDialogBuilder.setIcon(R.drawable.exit)
+        alertDialogBuilder.setMessage("Are you sure You want to exit")
+        alertDialogBuilder.setCancelable(false)
+        alertDialogBuilder.setPositiveButton("Yes") { dialog, which -> finish() }
+        alertDialogBuilder.setNegativeButton("No") { dialog, which -> }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 }
